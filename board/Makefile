@@ -28,3 +28,4 @@ lib-$(CONFIG_XIAOMI_BEGONIA) += xiaomi/board-begonia.o
 lib-$(CONFIG_XIAOMI_BLOSSOM) += xiaomi/board-blossom.o
 lib-$(CONFIG_XIAOMI_CAMELLIA) += xiaomi/board-camellia.o
 lib-$(CONFIG_ITEL_P682LPN)	+= itel/board-p682lpn.o
+lib-$(CONFIG_HUAWEI_AGASSI2)	+= huawei/board-agassi2.o
