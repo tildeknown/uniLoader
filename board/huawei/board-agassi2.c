@@ -9,41 +9,18 @@
 #include <util.h>
 #include <drivers/framework.h>
 #include <lib/simplefb.h>
-
-#define SP805_WDT_BASE        0xE8A06000U
-
-#define SP805_WDTCONTROL      0x008U
-#define SP805_WDTLOCK         0xC00U
-
-#define SP805_WDT_UNLOCK_KEY  0x1ACCE551U
-#define SP805_WDT_LOCK_KEY    0x00000001U
-
-void agassi2_disable_wdt(void)
-{
-	volatile unsigned int *wdt_control =
-		(volatile unsigned int *)(SP805_WDT_BASE + SP805_WDTCONTROL);
-	volatile unsigned int *wdt_lock =
-		(volatile unsigned int *)(SP805_WDT_BASE + SP805_WDTLOCK);
-
-	*wdt_lock = SP805_WDT_UNLOCK_KEY;
-	*wdt_control = 0;
-	*wdt_lock = SP805_WDT_LOCK_KEY;
-	(void)*wdt_lock;
-}
+#include <soc/hi6250.h>
 
 int agassi2_early_init(void)
 {
-	unsigned long cpacr;
-	__asm__ volatile ("mrs %0, cpacr_el1" : "=r" (cpacr));
-	cpacr |= (3UL << 20);
-	__asm__ volatile ("msr cpacr_el1, %0" :: "r" (cpacr));
+	hi6250_enable_frp();
 	return 0;
 }
 
 int agassi2_late_init(void)
 {
 #ifdef CONFIG_HUAWEI_AGASSI2_DISABLE_WDT
-	agassi2_disable_wdt();
+	hi6250_disable_wdt();
 #endif
 	return 0;
 }
